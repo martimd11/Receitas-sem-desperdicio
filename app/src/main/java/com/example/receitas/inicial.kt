@@ -21,8 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-
-// Importação das cores (Para corrigir o erro Unresolved Reference)
 import com.example.receitas.ui.theme.GreenBackground
 import com.example.receitas.ui.theme.OffWhitePanel
 
@@ -42,7 +40,7 @@ fun EcraInicio(navController: NavController) {
         ) {
             // Títulos
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = "Receitas sem Desperdicio To Go",
                     style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center),
@@ -85,7 +83,7 @@ fun EcraInicio(navController: NavController) {
                 BotaoGrande(
                     texto = "Aproveitar em casa",
                     icon = Icons.Filled.ShoppingBasket,
-                    onClick = { navController.navigate("aproveitar") }
+                    onClick = { navController.navigate("aproveitar") } // Navega para o outro ecrã
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))

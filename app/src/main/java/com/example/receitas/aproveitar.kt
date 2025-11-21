@@ -25,8 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-
-// Importação das cores (Resolve o erro GreenBackground)
 import com.example.receitas.ui.theme.GreenBackground
 import com.example.receitas.ui.theme.OffWhitePanel
 import com.example.receitas.ui.theme.BrownBasket
@@ -48,7 +46,7 @@ fun EcraAproveitar(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
-                onClick = { navController.popBackStack() }, // Volta para trás
+                onClick = { navController.popBackStack() }, // Botão voltar funciona
                 modifier = Modifier
                     .size(48.dp)
                     .background(Color.White, RoundedCornerShape(12.dp))
