@@ -88,6 +88,9 @@ fun NavegacaoPrincipal() {
             composable("aproveitar") {
                 EcraAproveitar(navController)
             }
+            composable("historico") {
+                HistoricoScreen(navController)
+            }
         }
     }
 }

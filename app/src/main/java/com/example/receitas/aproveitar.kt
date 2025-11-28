@@ -38,15 +38,16 @@ fun EcraAproveitar(navController: NavController) {
             .fillMaxSize()
             .background(GreenBackground)
     ) {
-        // Cabeçalho
+        // --- CABEÇALHO ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp, start = 24.dp, end = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            // Botão Voltar
             IconButton(
-                onClick = { navController.popBackStack() }, // Botão voltar funciona
+                onClick = { navController.popBackStack() },
                 modifier = Modifier
                     .size(48.dp)
                     .background(Color.White, RoundedCornerShape(12.dp))
@@ -54,10 +55,18 @@ fun EcraAproveitar(navController: NavController) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.Black)
             }
 
-            BotaoQuadradoPequeno(icon = Icons.Filled.Refresh)
-        }
+            // Botão Histórico (Corrigido)
+            IconButton(
+                onClick = { navController.navigate("historico") },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(Color.White, RoundedCornerShape(12.dp))
+            ) {
+                Icon(Icons.Default.Refresh, contentDescription = "Histórico", tint = Color.Black)
+            }
+        } // <--- A CHAVETA QUE FALTAVA ESTAVA AQUI!
 
-        // Painel Central
+        // --- PAINEL CENTRAL BRANCO ---
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,10 +90,14 @@ fun EcraAproveitar(navController: NavController) {
                 Icon(Icons.Default.Home, "Cesto", modifier = Modifier.size(90.dp), tint = BrownBasket)
             }
             Spacer(modifier = Modifier.height(50.dp))
+
+            // Aqui chama a função da barra de pesquisa
             BarraDePesquisa(texto = textoPesquisa, aoMudarTexto = { textoPesquisa = it })
         }
     }
 }
+
+// --- OUTRAS FUNÇÕES (Fora do EcraAproveitar) ---
 
 @Composable
 fun BotaoQuadradoPequeno(icon: ImageVector) {
