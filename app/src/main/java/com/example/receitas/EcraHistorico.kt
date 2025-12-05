@@ -1,7 +1,10 @@
 package com.example.receitas
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,7 +34,7 @@ fun EcraHistorico(navController: NavController) {
             .fillMaxSize()
             .background(GreenBackground)
     ) {
-        // Botão de Voltar (Canto Superior Esquerdo)
+        // Botão de Voltar
         IconButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier
@@ -50,10 +53,10 @@ fun EcraHistorico(navController: NavController) {
                 .align(Alignment.BottomCenter)
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
                 .background(OffWhitePanel)
-                .padding(24.dp),
+                .padding(24.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Ícone do Relógio
             Icon(
                 imageVector = Icons.Default.History,
                 contentDescription = null,
@@ -63,13 +66,11 @@ fun EcraHistorico(navController: NavController) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Título
             Text(
                 text = "Histórico de receitas",
                 style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold)
             )
 
-            // Linha decorativa
             Divider(
                 color = Color.Black,
                 thickness = 2.dp,
@@ -78,18 +79,30 @@ fun EcraHistorico(navController: NavController) {
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            // Itens da Lista
-            ItemHistorico(nome = "Bolo de bolacha")
+            // --- AQUI ESTÁ A CORREÇÃO ---
+            // Estamos a dizer: "Quando clicar aqui, navega para 'detalhes'"
+            ItemHistorico(
+                nome = "Bolo de bolacha",
+                aoClicar = { navController.navigate("detalhes") }
+            )
+
             Spacer(modifier = Modifier.height(30.dp))
-            ItemHistorico(nome = "Caldo Verde")
+
+            ItemHistorico(
+                nome = "Caldo Verde",
+                aoClicar = { navController.navigate("detalhes") }
+            )
         }
     }
 }
 
+// Esta função recebe o "aoClicar" para saber o que fazer quando tocas nela
 @Composable
-fun ItemHistorico(nome: String) {
+fun ItemHistorico(nome: String, aoClicar: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { aoClicar() }, // AQUI usamos o comando recebido
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -98,7 +111,6 @@ fun ItemHistorico(nome: String) {
                 text = nome,
                 style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
             )
-            // Sublinhado do item
             Divider(
                 color = Color.Black,
                 thickness = 2.dp,
@@ -106,7 +118,6 @@ fun ItemHistorico(nome: String) {
             )
         }
 
-        // Seta
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
             contentDescription = "Ir",

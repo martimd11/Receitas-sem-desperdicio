@@ -14,10 +14,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.receitas.ui.theme.GreenBackground
 
 class MainActivity : ComponentActivity() {
@@ -34,9 +36,6 @@ class MainActivity : ComponentActivity() {
 fun NavegacaoPrincipal() {
     val navController = rememberNavController()
 
-    // Itens da barra de baixo
-    val items = listOf("inicio", "aproveitar")
-
     Scaffold(
         bottomBar = {
             NavigationBar(
@@ -46,7 +45,7 @@ fun NavegacaoPrincipal() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
-                // Item 1: Início
+                // Botão Início
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Home, contentDescription = null) },
                     label = { Text("Início") },
@@ -60,7 +59,7 @@ fun NavegacaoPrincipal() {
                     }
                 )
 
-                // Item 2: Pesquisar / Aproveitar
+                // Botão Pesquisar/Aproveitar
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Search, contentDescription = null) },
                     label = { Text("Pesquisar") },
@@ -76,16 +75,23 @@ fun NavegacaoPrincipal() {
             }
         }
     ) { innerPadding ->
-        // NAVHOST COM TODAS AS ROTAS
         NavHost(
             navController = navController,
             startDestination = "inicio",
             modifier = Modifier.padding(innerPadding)
         ) {
+            // As tuas rotas antigas
             composable("inicio") { EcraInicio(navController) }
             composable("aproveitar") { EcraAproveitar(navController) }
             composable("historico") { EcraHistorico(navController) }
             composable("adicionar") { EcraAdicionar(navController) }
+
+            // A NOVA ROTA DE DETALHES
+            // Dentro do NavHost...
+
+            composable("detalhes") {
+                EcraDetalhes(navController)
+            }
         }
     }
 }
