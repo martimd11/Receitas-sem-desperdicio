@@ -2,6 +2,7 @@ package com.example.receitas
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,9 +10,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,14 +40,13 @@ fun EcraAproveitar(navController: NavController) {
             .fillMaxSize()
             .background(GreenBackground)
     ) {
-        // --- CABEÇALHO ---
+        // Cabeçalho
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp, start = 24.dp, end = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Botão Voltar
             IconButton(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
@@ -55,18 +56,18 @@ fun EcraAproveitar(navController: NavController) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.Black)
             }
 
-            // Botão Histórico (Corrigido)
+            // Botão Histórico (Canto Superior Direito)
             IconButton(
                 onClick = { navController.navigate("historico") },
                 modifier = Modifier
                     .size(48.dp)
                     .background(Color.White, RoundedCornerShape(12.dp))
             ) {
-                Icon(Icons.Default.Refresh, contentDescription = "Histórico", tint = Color.Black)
+                Icon(Icons.Default.History, contentDescription = "Histórico", tint = Color.Black)
             }
-        } // <--- A CHAVETA QUE FALTAVA ESTAVA AQUI!
+        }
 
-        // --- PAINEL CENTRAL BRANCO ---
+        // Painel Central
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,28 +82,23 @@ fun EcraAproveitar(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                // Botão Adicionar (+) - NAVEGAÇÃO AQUI
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clickable { navController.navigate("adicionar") }
+                ) {
                     Box(modifier = Modifier.size(70.dp).background(Color.Black, CircleShape), contentAlignment = Alignment.Center) {
                         Icon(Icons.Default.Add, "Adicionar", tint = Color.White, modifier = Modifier.size(40.dp))
                     }
                     Text("Adicionar\nReceitas", style = TextStyle(fontWeight = FontWeight.Bold), textAlign = TextAlign.Center)
                 }
+
+                // Ícone Cesto
                 Icon(Icons.Default.Home, "Cesto", modifier = Modifier.size(90.dp), tint = BrownBasket)
             }
             Spacer(modifier = Modifier.height(50.dp))
-
-            // Aqui chama a função da barra de pesquisa
             BarraDePesquisa(texto = textoPesquisa, aoMudarTexto = { textoPesquisa = it })
         }
-    }
-}
-
-// --- OUTRAS FUNÇÕES (Fora do EcraAproveitar) ---
-
-@Composable
-fun BotaoQuadradoPequeno(icon: ImageVector) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.size(48.dp).background(Color.White, RoundedCornerShape(12.dp))) {
-        Icon(icon, null, tint = Color.Black, modifier = Modifier.size(24.dp))
     }
 }
 

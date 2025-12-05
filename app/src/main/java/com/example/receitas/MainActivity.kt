@@ -40,7 +40,7 @@ fun NavegacaoPrincipal() {
     Scaffold(
         bottomBar = {
             NavigationBar(
-                containerColor = GreenBackground, // Usa a tua cor verde na barra
+                containerColor = GreenBackground,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -76,21 +76,16 @@ fun NavegacaoPrincipal() {
             }
         }
     ) { innerPadding ->
-        // Área onde os ecrãs mudam
+        // NAVHOST COM TODAS AS ROTAS
         NavHost(
             navController = navController,
             startDestination = "inicio",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("inicio") {
-                EcraInicio(navController)
-            }
-            composable("aproveitar") {
-                EcraAproveitar(navController)
-            }
-            composable("historico") {
-                HistoricoScreen(navController)
-            }
+            composable("inicio") { EcraInicio(navController) }
+            composable("aproveitar") { EcraAproveitar(navController) }
+            composable("historico") { EcraHistorico(navController) }
+            composable("adicionar") { EcraAdicionar(navController) }
         }
     }
 }
