@@ -3,8 +3,6 @@ package com.example.receitas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -34,7 +32,7 @@ fun EcraHistorico(navController: NavController) {
             .fillMaxSize()
             .background(GreenBackground)
     ) {
-        // Botão de Voltar
+        // Botão Voltar
         IconButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier
@@ -53,76 +51,44 @@ fun EcraHistorico(navController: NavController) {
                 .align(Alignment.BottomCenter)
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
                 .background(OffWhitePanel)
-                .padding(24.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = Icons.Default.History,
-                contentDescription = null,
-                modifier = Modifier.size(70.dp),
-                tint = Color.Black
-            )
-
+            Icon(Icons.Default.History, null, modifier = Modifier.size(70.dp), tint = Color.Black)
             Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Histórico de receitas",
-                style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            )
-
-            Divider(
-                color = Color.Black,
-                thickness = 2.dp,
-                modifier = Modifier.width(200.dp).padding(top = 8.dp)
-            )
+            Text("Histórico de receitas", style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold))
+            Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.width(200.dp).padding(top = 8.dp))
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            // --- AQUI ESTÁ A CORREÇÃO ---
-            // Estamos a dizer: "Quando clicar aqui, navega para 'detalhes'"
-            ItemHistorico(
-                nome = "Bolo de bolacha",
-                aoClicar = { navController.navigate("detalhes") }
-            )
-
+            // --- LISTA DE RECEITAS ---
+            // ID 1 = Bolo de Bolacha
+            ItemHistorico(nome = "Bolo de bolacha") {
+                navController.navigate("detalhes/1")
+            }
             Spacer(modifier = Modifier.height(30.dp))
 
-            ItemHistorico(
-                nome = "Caldo Verde",
-                aoClicar = { navController.navigate("detalhes") }
-            )
+            // ID 2 = Caldo Verde
+            ItemHistorico(nome = "Caldo Verde") {
+                navController.navigate("detalhes/2")
+            }
         }
     }
 }
 
-// Esta função recebe o "aoClicar" para saber o que fazer quando tocas nela
 @Composable
 fun ItemHistorico(nome: String, aoClicar: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { aoClicar() }, // AQUI usamos o comando recebido
+            .clickable { aoClicar() }, // Torna a linha clicável
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(
-                text = nome,
-                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
-            )
-            Divider(
-                color = Color.Black,
-                thickness = 2.dp,
-                modifier = Modifier.width(180.dp).padding(top = 4.dp)
-            )
+            Text(text = nome, style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))
+            Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.width(180.dp).padding(top = 4.dp))
         }
-
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-            contentDescription = "Ir",
-            modifier = Modifier.size(40.dp),
-            tint = Color.Black
-        )
+        Icon(Icons.AutoMirrored.Filled.ArrowForward, "Ir", modifier = Modifier.size(40.dp), tint = Color.Black)
     }
 }

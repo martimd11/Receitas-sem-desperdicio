@@ -14,10 +14,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.receitas.ui.theme.GreenBackground
 
 class MainActivity : ComponentActivity() {
@@ -34,19 +36,20 @@ class MainActivity : ComponentActivity() {
 fun NavegacaoPrincipal() {
     val navController = rememberNavController()
 
-    // Verifica a rota atual para decidir se mostra a barra de baixo ou não
+    // Lógica para esconder a barra de navegação no ecrã de Login
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-    val currentRoute = currentDestination?.route
+    val currentRoute = navBackStackEntry?.destination?.route
+    val showBottomBar = currentRoute != "login" // Se for "login", a barra desaparece
 
     Scaffold(
         bottomBar = {
-            // Só mostramos a barra se NÃO estivermos no login
-            if (currentRoute != "login") {
+            if (showBottomBar) { // Só desenha a barra se não estivermos no login
                 NavigationBar(
                     containerColor = GreenBackground,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
+                    val currentDestination = navBackStackEntry?.destination
+
                     // Item 1: Início
                     NavigationBarItem(
                         icon = { Icon(Icons.Filled.Home, contentDescription = null) },
@@ -78,27 +81,46 @@ fun NavegacaoPrincipal() {
             }
         }
     ) { innerPadding ->
-        // NAVHOST COM TODAS AS ROTAS
+        // --- NAVHOST: Onde definimos todas as rotas da aplicação ---
         NavHost(
             navController = navController,
-            startDestination = "login", // Começa no login (trabalho do teu amigo)
+            startDestination = "login", // <--- O PONTO DE PARTIDA É O LOGIN
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Rota do Login
+            // 1. Ecrã de Login
             composable("login") {
-                Login(navController)
+                // Certifica-te que o teu ficheiro EcraLogin tem a função chamada "EcraLogin"
+                EcraLogin(navController)
             }
 
-            // As tuas outras rotas
-            composable("inicio") { EcraInicio(navController) }
-            composable("aproveitar") { EcraAproveitar(navController) }
-            composable("historico") { EcraHistorico(navController) }
-            composable("adicionar") { EcraAdicionar(navController) }
+            // 2. Ecrã Início
+            composable("inicio") {
+                EcraInicio(navController)
+            }
 
-            // --- AQUI ESTÁ A NOVIDADE ---
-            // A rota para veres os detalhes da receita
-            composable("detalhes") {
-                EcraDetalhes(navController)
+            // 3. Ecrã Aproveitar (Pesquisa)
+            composable("aproveitar") {
+                EcraAproveitar(navController)
+            }
+
+            // 4. Ecrã Histórico
+            composable("historico") {
+                EcraHistorico(navController)
+            }
+
+            // 5. Ecrã Adicionar
+            composable("adicionar") {
+                EcraAdicionar(navController)
+            }
+
+            // 6. Ecrã de Detalhes (Inteligente - Recebe o ID da receita)
+            composable(
+                route = "detalhes/{receitaId}",
+                arguments = listOf(navArgument("receitaId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                // Pega o número do ID enviado e abre o ecrã com a receita certa
+                val id = backStackEntry.arguments?.getInt("receitaId") ?: 1
+                EcraDetalhes(navController, id)
             }
         }
     }

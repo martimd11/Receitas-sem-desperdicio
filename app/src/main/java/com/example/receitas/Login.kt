@@ -1,29 +1,13 @@
 package com.example.receitas
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun Login(navController: NavController) {
+fun EcraLogin(navController: NavController) {
     // Variáveis para guardar o texto que o utilizador escreve
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -40,7 +24,7 @@ fun Login(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp), // Margem à volta de tudo
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -90,8 +74,7 @@ fun Login(navController: NavController) {
         // Botão de Entrar
         Button(
             onClick = {
-                // AQUI PODES ADICIONAR LÓGICA DE VALIDAÇÃO (ex: se password está correta)
-                // Por agora, entra sempre:
+                // Navega para o inicio e remove o login da pilha (para não voltar atrás)
                 navController.navigate("inicio") {
                     popUpTo("login") { inclusive = true }
                 }
@@ -105,7 +88,7 @@ fun Login(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botão de "Esqueci-me da senha" ou "Criar conta" (apenas visual por enquanto)
+        // Botão de registo (apenas visual)
         TextButton(onClick = { /* Ação futura */ }) {
             Text("Ainda não tens conta? Regista-te")
         }

@@ -16,11 +16,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun EcraDetalhes(navController: NavController) {
+fun EcraDetalhes(navController: NavController, receitaId: Int) {
+    // Procura a receita na lista pelo ID. Se não encontrar, usa uma vazia.
+    val receita = listaDeReceitas.find { it.id == receitaId } ?: listaDeReceitas[0]
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color.White) // Fundo Branco como na imagem
             .padding(24.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -38,39 +41,48 @@ fun EcraDetalhes(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Título Principal ---
+        // --- Título da Receita (Verde) ---
         Text(
-            text = "Título da Receita",
+            text = receita.nome,
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF2E7D32) // Verde
+            color = Color(0xFF2E7D32) // Verde Escuro
         )
 
         Divider(
             modifier = Modifier.padding(vertical = 16.dp),
-            thickness = 2.dp,
+            thickness = 1.dp,
             color = Color.LightGray
         )
 
-        // --- Secção Ingredientes (SÓ O TÍTULO) ---
+        // --- Secção Ingredientes ---
         Text(
             text = "Ingredientes",
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = receita.ingredientes,
+            fontSize = 18.sp,
+            color = Color.DarkGray
         )
 
-        // Espaço em branco onde os ingredientes iriam aparecer
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-        // --- Secção Preparação (SÓ O TÍTULO) ---
+        // --- Secção Preparação ---
         Text(
             text = "Modo de Preparação",
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
         )
-
-        // Espaço em branco onde a preparação iria aparecer
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = receita.preparacao,
+            fontSize = 18.sp,
+            color = Color.DarkGray
+        )
     }
 }
-
