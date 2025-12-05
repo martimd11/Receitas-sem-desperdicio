@@ -35,7 +35,6 @@ fun NavegacaoPrincipal() {
     val navController = rememberNavController()
 
     // Verifica a rota atual para decidir se mostra a barra de baixo ou não
-    // (Geralmente não queremos a barra de navegação no ecrã de Login)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val currentRoute = currentDestination?.route
@@ -82,18 +81,25 @@ fun NavegacaoPrincipal() {
         // NAVHOST COM TODAS AS ROTAS
         NavHost(
             navController = navController,
-            startDestination = "login", // <--- MUDADO: Começa no login
+            startDestination = "login", // Começa no login (trabalho do teu amigo)
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Rota do Login (certifica-te que o nome da função no outro ficheiro é Login)
+            // Rota do Login
             composable("login") {
                 Login(navController)
             }
 
+            // As tuas outras rotas
             composable("inicio") { EcraInicio(navController) }
             composable("aproveitar") { EcraAproveitar(navController) }
             composable("historico") { EcraHistorico(navController) }
             composable("adicionar") { EcraAdicionar(navController) }
+
+            // --- AQUI ESTÁ A NOVIDADE ---
+            // A rota para veres os detalhes da receita
+            composable("detalhes") {
+                EcraDetalhes(navController)
+            }
         }
     }
 }
