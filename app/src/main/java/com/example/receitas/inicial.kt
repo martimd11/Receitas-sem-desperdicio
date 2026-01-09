@@ -74,16 +74,17 @@ fun EcraInicio(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                // --- BOTÃO DO MAPA ATUALIZADO ---
                 BotaoGrande(
                     texto = "Ofertas locais",
                     icon = Icons.Filled.LocationOn,
-                    onClick = { /* Ação futura */ }
+                    onClick = { navController.navigate("mapa") } // <--- AGORA VAI PARA O MAPA
                 )
 
                 BotaoGrande(
                     texto = "Aproveitar em casa",
                     icon = Icons.Filled.ShoppingBasket,
-                    onClick = { navController.navigate("aproveitar") } // Navega para o outro ecrã
+                    onClick = { navController.navigate("aproveitar") }
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
