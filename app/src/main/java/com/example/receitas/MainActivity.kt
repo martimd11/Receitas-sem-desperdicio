@@ -83,11 +83,11 @@ fun NavegacaoPrincipal() {
             }
         }
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = "login", // O Login é o primeiro ecrã
-            modifier = Modifier.padding(innerPadding)
-        ) {
+        NavHost(navController = navController, startDestination = "login") {
+
+            // ADICIONA ESTA LINHA AQUI:
+            composable("registo") { EcraRegisto(navController) }
+
             composable("login") { EcraLogin(navController) }
             composable("inicio") { EcraInicio(navController) }
             composable("aproveitar") { EcraAproveitar(navController) }
