@@ -1,5 +1,6 @@
 package com.example.receitas
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,12 +25,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.receitas.ui.theme.GreenBackground
 import com.example.receitas.ui.theme.OffWhitePanel
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun EcraAdicionar(navController: NavController) {
-    // Variáveis para guardar o que o utilizador escreve
+    // 1. Variáveis de Estado (Agora com PREPARAÇÃO)
     var nomeReceita by remember { mutableStateOf("") }
     var ingredientes by remember { mutableStateOf("") }
+    var preparacao by remember { mutableStateOf("") } // <--- NOVO
+
+    val context = LocalContext.current
+    val db = FirebaseFirestore.getInstance()
 
     Box(
         modifier = Modifier
@@ -52,30 +59,23 @@ fun EcraAdicionar(navController: NavController) {
                 .fillMaxWidth()
                 .fillMaxHeight(0.85f)
                 .align(Alignment.BottomCenter)
+                .imePadding()
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
                 .background(OffWhitePanel)
                 .padding(24.dp)
-                .verticalScroll(rememberScrollState()), // Permite fazer scroll se o teclado tapar
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Título e Ícone Topo
+            // Título
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.AddCircle,
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                    tint = Color.Black
-                )
+                Icon(Icons.Default.AddCircle, null, modifier = Modifier.size(40.dp), tint = Color.Black)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Nova Receita",
-                    style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold)
-                )
+                Text("Nova Receita", style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold))
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- 1. Espaço para IMAGEM ---
+            // Imagem (Placeholder)
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -85,58 +85,80 @@ fun EcraAdicionar(navController: NavController) {
                     .border(1.dp, Color.Gray, RoundedCornerShape(12.dp))
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.Image,
-                        contentDescription = "Adicionar Foto",
-                        modifier = Modifier.size(50.dp),
-                        tint = Color.Gray
-                    )
-                    Text("Carregar Foto", color = Color.Gray)
+                    Icon(Icons.Default.Image, "Foto", modifier = Modifier.size(50.dp), tint = Color.Gray)
+                    Text("Carregar Foto (Brevemente)", color = Color.Gray)
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- 2. Input NOME DA RECEITA ---
+            // Input NOME
             OutlinedTextField(
                 value = nomeReceita,
                 onValueChange = { nomeReceita = it },
                 label = { Text("Nome da Receita") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
-                )
+                colors = OutlinedTextFieldDefaults.colors(focusedContainerColor = Color.White, unfocusedContainerColor = Color.White)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- 3. Input INGREDIENTES ---
+            // Input INGREDIENTES
             OutlinedTextField(
                 value = ingredientes,
                 onValueChange = { ingredientes = it },
-                label = { Text("Ingredientes ") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp), // Mais alto para caber texto
+                label = { Text("Ingredientes") },
+                modifier = Modifier.fillMaxWidth().height(100.dp),
                 shape = RoundedCornerShape(12.dp),
                 minLines = 3,
                 maxLines = 5,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
-                )
+                colors = OutlinedTextFieldDefaults.colors(focusedContainerColor = Color.White, unfocusedContainerColor = Color.White)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // --- NOVO CAMPO: Input PREPARAÇÃO ---
+            OutlinedTextField(
+                value = preparacao,
+                onValueChange = { preparacao = it },
+                label = { Text("Modo de Preparação") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp), // Caixa mais alta
+                shape = RoundedCornerShape(12.dp),
+                minLines = 5, // Começa com 5 linhas visíveis
+                maxLines = 10,
+                colors = OutlinedTextFieldDefaults.colors(focusedContainerColor = Color.White, unfocusedContainerColor = Color.White)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- 4. Botão GUARDAR ---
+            // Botão GUARDAR
             Button(
-                onClick = { /* Lógica para guardar seria aqui */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
+                onClick = {
+                    if (nomeReceita.isEmpty() || ingredientes.isEmpty() || preparacao.isEmpty()) {
+                        Toast.makeText(context, "Preencha todos os campos!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val receitaParaGuardar = hashMapOf(
+                            "titulo" to nomeReceita,
+                            "ingredientes" to ingredientes,
+                            "preparacao" to preparacao, // <--- Agora enviamos a preparação também!
+                            "autor" to "Eu"
+                        )
+
+                        db.collection("receitas")
+                            .add(receitaParaGuardar)
+                            .addOnSuccessListener {
+                                Toast.makeText(context, "Receita Guardada!", Toast.LENGTH_LONG).show()
+                                navController.popBackStack()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(context, "Erro: ${e.message}", Toast.LENGTH_LONG).show()
+                            }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                 shape = RoundedCornerShape(12.dp)
             ) {

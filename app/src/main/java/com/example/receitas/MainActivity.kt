@@ -57,7 +57,9 @@ fun NavegacaoPrincipal() {
                         selected = currentDestination?.hierarchy?.any { it.route == "inicio" } == true,
                         onClick = {
                             navController.navigate("inicio") {
-                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
                                 launchSingleTop = true
                                 restoreState = true
                             }
@@ -69,7 +71,9 @@ fun NavegacaoPrincipal() {
                         selected = currentDestination?.hierarchy?.any { it.route == "aproveitar" } == true,
                         onClick = {
                             navController.navigate("aproveitar") {
-                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
                                 launchSingleTop = true
                                 restoreState = true
                             }
@@ -96,10 +100,13 @@ fun NavegacaoPrincipal() {
             // Detalhes da Receita
             composable(
                 route = "detalhes/{receitaId}",
-                arguments = listOf(navArgument("receitaId") { type = NavType.IntType })
+                arguments = listOf(navArgument("receitaId") { type = NavType.StringType }) // MUDANÇA 1: StringType
             ) { backStackEntry ->
-                val id = backStackEntry.arguments?.getInt("receitaId") ?: 1
-                EcraDetalhes(navController, id)
+                // MUDANÇA 2: getString em vez de getInt
+                val id = backStackEntry.arguments?.getString("receitaId")
+
+                // Agora passamos o texto (String) para o ecrã
+                EcraDetalhes(navController, receitaId = id)
             }
         }
     }
