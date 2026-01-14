@@ -1,5 +1,6 @@
 package com.example.receitas
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -10,16 +11,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth // IMPORTANTE: Importar o Auth
 
 @Composable
 fun EcraLogin(navController: NavController) {
-    // Variáveis para guardar o texto que o utilizador escreve
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance() // Instância do Firebase
 
     Column(
         modifier = Modifier
@@ -28,7 +33,6 @@ fun EcraLogin(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Ícone grande de Login
         Icon(
             imageVector = Icons.Default.AccountCircle,
             contentDescription = null,
@@ -45,7 +49,6 @@ fun EcraLogin(navController: NavController) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Campo de Email
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -57,13 +60,12 @@ fun EcraLogin(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campo de Password
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Palavra-passe") },
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-            visualTransformation = PasswordVisualTransformation(), // Esconde a senha
+            visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -71,25 +73,37 @@ fun EcraLogin(navController: NavController) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Botão de Entrar
+        // --- BOTÃO ENTRAR COM FIREBASE ---
         Button(
             onClick = {
-                // Navega para o inicio e remove o login da pilha (para não voltar atrás)
-                navController.navigate("inicio") {
-                    popUpTo("login") { inclusive = true }
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(context, "Login efetuado!", Toast.LENGTH_SHORT).show()
+                                navController.navigate("inicio") {
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            } else {
+                                // Se der erro (utilizador não existe ou pass errada)
+                                Toast.makeText(context, "Erro: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                } else {
+                    Toast.makeText(context, "Preencha os campos!", Toast.LENGTH_SHORT).show()
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
+            modifier = Modifier.fillMaxWidth().height(50.dp)
         ) {
             Text(text = "Entrar")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botão de registo (apenas visual)
-        TextButton(onClick = { /* Ação futura */ }) {
+        // --- BOTÃO PARA IR AO REGISTO ---
+        TextButton(onClick = {
+            navController.navigate("registo") // Precisamos de criar esta rota!
+        }) {
             Text("Ainda não tens conta? Regista-te")
         }
     }
