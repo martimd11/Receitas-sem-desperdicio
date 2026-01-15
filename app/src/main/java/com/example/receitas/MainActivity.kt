@@ -40,7 +40,7 @@ fun NavegacaoPrincipal() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     // Esconder a barra no Login E no Mapa
-    val showBottomBar = currentRoute != "login" && currentRoute != "mapa"
+    val showBottomBar = currentRoute != "login" && currentRoute != "mapa" && currentRoute != "registo"
 
     Scaffold(
         bottomBar = {
