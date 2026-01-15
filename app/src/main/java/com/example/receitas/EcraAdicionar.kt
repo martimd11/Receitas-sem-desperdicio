@@ -143,7 +143,7 @@ fun EcraAdicionar(navController: NavController) {
                         val receitaParaGuardar = hashMapOf(
                             "titulo" to nomeReceita,
                             "ingredientes" to ingredientes,
-                            "preparacao" to preparacao, // <--- Agora enviamos a preparação também!
+                            "preparacao" to preparacao,
                             "autor" to "Eu"
                         )
 
@@ -164,6 +164,9 @@ fun EcraAdicionar(navController: NavController) {
             ) {
                 Text("Guardar Receita", color = Color.White, fontSize = 16.sp)
             }
+
+            // --- ESPAÇO EXTRA NO FIM ---
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }
